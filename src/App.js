@@ -4,46 +4,6 @@ import MuxPlayer from '@mux/mux-player-react';
 const App = () => {
   const playerRef = useRef(null);
 
-  // Handle text tracks
-  useEffect(() => {
-    const player = playerRef.current;
-    if (!player) return;
-
-    const disableTracks = () => {
-      console.log('[VideoPlayer] Disabling text tracks');
-      const tracks = player.textTracks;
-      if (tracks) {
-        console.log('[VideoPlayer] Found tracks:', tracks.length);
-        for (let i = 0; i < tracks.length; i++) {
-          tracks[i].mode = 'disabled';
-          console.log('[VideoPlayer] Disabled track:', tracks[i].label);
-        }
-      }
-    };
-
-    // Run when video loads
-    player.addEventListener('loadedmetadata', disableTracks);
-
-    // Run when tracks change
-    player.addEventListener('texttrackchange', () => {
-      const tracks = player.textTracks;
-      if (tracks) {
-        const hasActiveTrack = Array.from(tracks).some(
-          track => track.mode === 'showing'
-        );
-        if (hasActiveTrack) {
-          console.log('[VideoPlayer] Active track detected, disabling all tracks');
-          disableTracks();
-        }
-      }
-    });
-
-    return () => {
-      player.removeEventListener('loadedmetadata', disableTracks);
-      player.removeEventListener('texttrackchange', disableTracks);
-    };
-  }, []);
-
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
       <h1>Mux Player Caption Issue</h1>
